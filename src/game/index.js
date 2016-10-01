@@ -7,6 +7,7 @@ var BAR_SPEED = 100;
 var ball;
 var cursor;
 var bar;
+var bricks;
 
 var game = new Phaser.Game(
   // Game width
@@ -33,6 +34,10 @@ function preload() {
   game.load.image('ball-image', 'game/assets/pokeball.png');
   game.load.image('background-image', 'game/assets/pokebackground.png');
   game.load.image('bar-image', 'game/assets/bar.png');
+  game.load.image('brick01', 'game/assets/pokemon-00.png');
+  game.load.image('brick02', 'game/assets/pokemon-01.png');
+  game.load.image('brick03', 'game/assets/pokemon-02.png');
+  game.load.image('brick04', 'game/assets/pokemon-03.png');
 }
 
 function create() {
@@ -43,6 +48,7 @@ function create() {
 
   ball = createBall();
   bar = createBar();
+  bricks = createBricks();
 }
 
 function createBall() {
@@ -82,6 +88,7 @@ function update() {
   }
 
   game.physics.arcade.collide(bar, ball, null, reflect, this);
+  game.physics.arcade.collide(bricks, ball, null, null, this);
 }
 
 function reflect(bar, ball) {
@@ -105,4 +112,24 @@ function reflect(bar, ball) {
 
     return false;
   }
+}
+
+function createBricks()
+{
+  var bricks = game.add.group();
+  for (var i = 1; i <= 8; i++) {
+    var image = 'brick0' + (Math.floor(Math.random() * 4) + 1);
+
+    var widthBrick = game.cache.getImage(image).width;
+    var heightBrick = game.cache.getImage(image).height;
+
+    var brick = game.add.sprite(80 * i, 20, image);
+
+    game.physics.enable(brick, Phaser.Physics.ARCADE);
+    brick.body.immovable = true;
+
+    bricks.add(brick);
+  }
+
+  return bricks;
 }
