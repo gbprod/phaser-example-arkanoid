@@ -88,7 +88,7 @@ function update() {
   }
 
   game.physics.arcade.collide(bar, ball, null, reflect, this);
-  game.physics.arcade.collide(bricks, ball, null, null, this);
+  game.physics.arcade.collide(bricks, ball, null, breakBrick, this);
 }
 
 function reflect(bar, ball) {
@@ -114,22 +114,29 @@ function reflect(bar, ball) {
   }
 }
 
-function createBricks()
-{
+function createBricks() {
   var bricks = game.add.group();
-  for (var i = 1; i <= 8; i++) {
-    var image = 'brick0' + (Math.floor(Math.random() * 4) + 1);
+  for (var j = 1; j <= 3; j++) {
+    for (var i = 1; i <= 8; i++) {
+      var image = 'brick0' + (Math.floor(Math.random() * 4) + 1);
 
-    var widthBrick = game.cache.getImage(image).width;
-    var heightBrick = game.cache.getImage(image).height;
+      var widthBrick = game.cache.getImage(image).width;
+      var heightBrick = game.cache.getImage(image).height;
 
-    var brick = game.add.sprite(80 * i, 20, image);
+      var brick = game.add.sprite(80 * i, 20 + (80*(j-1)), image);
 
-    game.physics.enable(brick, Phaser.Physics.ARCADE);
-    brick.body.immovable = true;
+      game.physics.enable(brick, Phaser.Physics.ARCADE);
+      brick.body.immovable = true;
 
-    bricks.add(brick);
+      bricks.add(brick);
+    }
   }
 
   return bricks;
+}
+
+function breakBrick(ball, brick) {
+  brick.kill();
+
+  return true;
 }
