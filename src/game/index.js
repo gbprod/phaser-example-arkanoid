@@ -1,7 +1,7 @@
 var Phaser = require('phaser');
 
 var SCALE = 3;
-var BALL_SPEED = 400;
+var BALL_SPEED = 300;
 
 var ball;
 
@@ -36,19 +36,25 @@ function create() {
   game.stage.backgroundColor = "#4488AA";
   game.add.image(0, 0, 'background-image');
 
-  ball = game.add.sprite(0, 50, 'ball-image');
+  ball = createBall();
+}
+
+function createBall() {
+  var ball = game.add.sprite(0, 50, 'ball-image');
   game.physics.enable(ball, Phaser.Physics.ARCADE);
 
   ball.body.collideWorldBounds = true;
   ball.body.bounce.set(1);
 
-  var angle = 120 * 360 / Math.PI;
+  var angle = 90 * 180 / Math.PI;
   ball.body.velocity.setTo(
     Math.cos(angle) * BALL_SPEED,
     Math.sin(angle) * BALL_SPEED
   );
+
+  return ball;
 }
 
 function update() {
-
+  ball.angle += 4;
 }
