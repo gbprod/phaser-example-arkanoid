@@ -66,17 +66,43 @@ function createBar() {
   bar.scale.set(SCALE);
   game.physics.enable(bar, Phaser.Physics.ARCADE);
   bar.body.collideWorldBounds = true;
-
+  bar.body.immovable = true;
 
   return bar;
 }
 
 function update() {
   ball.angle += 8; // drunk mode
+
   bar.body.velocity.x = 0;
   if (cursor.left.isDown) {
     bar.body.velocity.x = - BAR_SPEED * SCALE;
   } else if (cursor.right.isDown) {
     bar.body.velocity.x = BAR_SPEED * SCALE;
+  }
+
+  game.physics.arcade.collide(bar, ball, null, reflect, this);
+}
+
+function reflect(bar, ball) {
+  if (ball.y > (bar.y + 5)) {
+    return true;
+  } else {
+    var rate = (1 - (ball.x + ball.width * 0.5 - bar.x ) / bar.width);
+    if(rate < 0.1) {
+      rate = 0.1;
+    }
+
+    if(rate > 0.9) {
+      rate = 0.9;
+    }
+
+    var angle = - Math.PI*rate;
+    ball.body.velocity.setTo(
+      Math.cos(angle) * BALL_SPEED,
+      Math.sin(angle) * BALL_SPEED
+    );
+
+    return false;
   }
 }
